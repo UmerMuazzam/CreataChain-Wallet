@@ -252,6 +252,7 @@ export const getNFTContract = async ( deployedAddress, tokenId, address) => {
   }
 };
 
+// function to transfer nft
 
 // CHECK OWNER OF NFT TOKEN 
 export const checkOwnerOfToken = async (address, deployedAddress, tokenId)=>{
@@ -285,7 +286,18 @@ export const getNftDetails = async (deployedAddress, tokenId, address)=>{
   }
 }
 
+  const contract = new web3.eth.Contract(tokenURIABI, tokenAddress);
+  console.log("contract ", contract);
 
+  const tx = {
+    from: address,
+    to: tokenAddress,
+    gas: 2000000, // Adjust gas limit as needed
+    data: contract.methods
+      .safeTransferFrom(address, sendTo, tokenId)
+      .encodeABI(),
+  };
+  console.log("tx", tx);
 
 
 

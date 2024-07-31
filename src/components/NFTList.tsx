@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react'
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 const NFTList = ({ contractDetails }) => {
    const router = useRouter();
@@ -39,4 +39,4 @@ const NFTList = ({ contractDetails }) => {
   );
 };
 
-export default NFTList
+export default NFTList;
