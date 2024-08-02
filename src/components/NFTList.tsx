@@ -18,7 +18,7 @@ const NFTList = ({ contractDetails }) => {
             )
           }
           key={i}
-          className="flex gap-4 items-center text-[14px] font-semibold cursor-pointer"
+          className="flex gap-4 items-center text-[14px] font-semibold cursor-pointer relative"
         >
           <div>
             <Image
@@ -33,6 +33,7 @@ const NFTList = ({ contractDetails }) => {
             <div>{item?.name}</div>
             <div className="text-blue">{item?.symbol} </div>
           </div>
+          {!item.owner && <div className="absolute font-normal py-1 px-2 right-0 bg-blue text-white rounded-md text-[12px]     ">Previously Owned </div>}
         </div>
       ))}
     </>

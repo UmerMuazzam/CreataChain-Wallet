@@ -252,7 +252,6 @@ export const getNFTContract = async ( deployedAddress, tokenId, address) => {
   }
 };
 
-// function to transfer nft
 
 // CHECK OWNER OF NFT TOKEN 
 export const checkOwnerOfToken = async (address, deployedAddress, tokenId)=>{
@@ -286,36 +285,33 @@ export const getNftDetails = async (deployedAddress, tokenId, address)=>{
   }
 }
 
-  const contract = new web3.eth.Contract(tokenURIABI, tokenAddress);
-  console.log("contract ", contract);
 
-  const tx = {
-    from: address,
-    to: tokenAddress,
-    gas: 2000000, // Adjust gas limit as needed
-    data: contract.methods
-      .safeTransferFrom(address, sendTo, tokenId)
-      .encodeABI(),
-  };
-  console.log("tx", tx);
 
 
 
 // function to transfer nft  
 
 export const transferNFT = async (privateKey, address, sendTo, tokenAddress, tokenId, tokenURIABI) => {
+
   try {
     const contract = new web3.eth.Contract(tokenURIABI, tokenAddress);
+    const data = contract.methods.safeTransferFrom(address, sendTo, tokenId).encodeABI();
+
+    const gasEstimate = await web3.eth.estimateGas({
+      from: address,
+      to: tokenAddress,
+      data: data,
+    }); 
+
     const tx = {
       from: address,
       to: tokenAddress,
-      gas: 2000000, // Adjust gas limit as needed
-      data: contract.methods.safeTransferFrom(address, sendTo, tokenId).encodeABI(),
+      gas: gasEstimate, // Adjust gas limit as needed
+      data,
       gasPrice: await web3.eth.getGasPrice()
-
     };
-    const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
     
+    const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
     const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction)       
         console.log("Transaction receipt:", receipt);
         
@@ -325,3 +321,20 @@ export const transferNFT = async (privateKey, address, sendTo, tokenAddress, tok
       return { ok: false, message: "Failed to transfer NFT by EVM" };
   }
 };
+
+
+
+// extimating gas fee  
+export const estimatedFee = async (address, sendTo, tokenAddress, tokenId, tokenURIABI)=>{
+  const contract = new web3.eth.Contract(tokenURIABI, tokenAddress);
+  const data = contract.methods.safeTransferFrom(address, sendTo, tokenId).encodeABI();
+  const gasEstimate = await web3.eth.estimateGas({
+    from: address,
+    to: tokenAddress,
+    data: data,
+  });
+  const gasPrice = await web3.eth.getGasPrice()
+  const total = Web3.utils.fromWei(gasEstimate * gasPrice, 'ether') ;
+  
+  return {ok:true, total, gasPrice, gasEstimate }
+}

@@ -5,7 +5,7 @@ import Button from "@/components/Button";
 import Error from "@/components/Error";
 import Loader from "@/components/Loader"; 
 import { tokenURIABI } from "@/utils/nftABI";
-import { transferNFT, web3 } from "@/utils/walletUtilities";
+import { checkOwnerOfToken, estimatedFee, transferNFT, web3 } from "@/utils/walletUtilities";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,11 +19,36 @@ const password = localStorage.getItem("password");
 
 const page = () => {
   const [loading, setLoading] = useState(false);
+  const [estimateFee, SetEstimateFee] = useState(0);
+  console.log("estimateFee", estimateFee);
   const [error, setError] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
   const tokenAddress = searchParams.get("tokenAddress");
   const tokenId = searchParams.get("tokenId");
+
+  const handleEstimateTotalFee= async(e)=>{
+    setError('')
+    SetEstimateFee(0)
+    console.log('handleEstimateTotalFee ',e.target.value)
+    // check reciever address is correct 
+    const valid = web3.utils.isAddress(e.target.value);
+    if(!valid) {
+      setError("Invalid reciever address");
+      setLoading(false);
+      return;
+    }
+  // estimate function to calculate gas fee 
+    const res = await estimatedFee(
+      address,
+      e.target.value,
+      tokenAddress,
+      tokenId,
+      tokenURIABI
+    ); 
+    SetEstimateFee(res)
+  }
+
 
   const handleForm = async (event) => {
     setError("")
@@ -121,6 +146,7 @@ const page = () => {
               className="w-[75%] bg-white  border py-2 px-4 rounded-lg outline-none"
               type="text"
               placeholder="Enter public address (0x) or Ens name"
+              onChange={handleEstimateTotalFee}
             />
             <input
               name="password"
@@ -129,6 +155,8 @@ const page = () => {
               type="password"
               placeholder="Enter your password"
             />
+
+          <div className="text-blue rounded-lg py-2 px-4 bg-white">Estimated Fee : {estimateFee.total} ETH </div>
 
             <div>{error && <Error>{error}</Error>}</div>
             <Button>Send</Button>

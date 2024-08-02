@@ -15,10 +15,13 @@ const page = () => {
   const deployedAddress = searchParams.get("address");
   const tokenId = searchParams.get("tokenId");
   const [data, setData] = useState({});
+  const [checkOwner, setCheckOwner] = useState(true);
+  
  
   async function getData() {
     const data = await getNftDetails(deployedAddress, tokenId, address);
     console.log("data", data);
+    setCheckOwner(data.owner)
     setData(data);
   }
   useEffect(() => {
@@ -76,21 +79,25 @@ const page = () => {
           <b>Token Address :</b> {data?.deployedAddress}{" "}
         </div>
 
-        {!data.owner ? (
+        {!checkOwner? (
           <div className="text-xl font-bold uppercase text-center mt-4 bg-blue text-white">
             You previously owned
           </div>
-        ) : (
-          ""
-        )}
+        ) : ""}
 
-        <Image
-          className="mt-12 mx-auto rounded-lg"
-          src={data.pinataImage}
-          height={200}
-          width={200}
-          alt="your nft"
-        />
+        {data.pinataImage ? (
+          <Image
+            className="mt-12 mx-auto rounded-lg"
+            src={data.pinataImage}
+            height={200}
+            width={200}
+            alt="your nft"
+          />
+        ) : (
+          <div className="text-xl text-blue text-center py-32 font-semibold">
+            Loading your NFT...
+          </div>
+        )}
         <div className="ml-[184px] mt-2 text-[17px] font-bold text-gray-500">
           {" "}
           id # {data?.tokenId}
@@ -103,7 +110,7 @@ const page = () => {
           </div>
 
           {data.owner ? (
-            <div>
+            <div className="text-center">
               <Image
                 onClick={() =>
                   router.push(

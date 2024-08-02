@@ -17,7 +17,7 @@ const ImportNFT = () => {
     ];
   } 
   const [error,setError]=useState("")
-  const [nftTokenList, setNftTokenList] = useState([]);
+  const [nftTokenList, setNftTokenList] = useState("");
   const [loader, setLoader] = useState(false);
   const router= useRouter()
 
@@ -110,7 +110,7 @@ useEffect(() => {
         </div>
       )}
 
-      <NFTList contractDetails={nftTokenList} />
+      {nftTokenList? <NFTList contractDetails={nftTokenList} /> : <div className='text-xl text-blue mt-4 '> Loading ...</div> }
     </div>
   );
 }

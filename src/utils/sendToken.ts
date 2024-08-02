@@ -1,5 +1,5 @@
 import Web3 from "web3";
-import { abi } from "./abi";
+import { abi } from "./abi.ts";
 
 const myPrivateKey =
   "2f909d1a5d9176106b9700aa7b148c334ed29fddd0793a150e9c01e57bdf8095";
