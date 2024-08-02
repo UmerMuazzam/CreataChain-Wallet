@@ -80,7 +80,7 @@ const page = () => {
         </div>
 
         {!checkOwner? (
-          <div className="text-xl font-bold uppercase text-center mt-4 bg-blue text-white">
+          <div className="text-xl  uppercase text-center mt-4 bg-blue text-white">
             You previously owned
           </div>
         ) : ""}

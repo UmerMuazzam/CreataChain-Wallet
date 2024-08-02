@@ -68,7 +68,6 @@ export default function BasicTabs({ myValue, transactionHistory }) {
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         
-        
         <ImportNFT/>
 
       </CustomTabPanel>
