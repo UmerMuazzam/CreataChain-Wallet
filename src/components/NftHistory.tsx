@@ -8,7 +8,7 @@ const NftHistory = () => {
     <div>
       {nftTransactionHistory.length? <h3 className="font-bold text-center text-[18px] mt-6">History</h3> : ''}
       {nftTransactionHistory.map((item) => (
-        <div className="flex justify-between mt-8" key={item.date}>
+        <div className="flex justify-between mt-4" key={item.date}>
           <div>
             <div className="flex flex-col ">
               <span className="font-semibold">Send {item.symbol}</span>
