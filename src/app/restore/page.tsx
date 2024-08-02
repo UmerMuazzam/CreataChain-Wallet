@@ -42,8 +42,7 @@ const page = () => {
           confirmPass: "",
         }}
         validationSchema={SignupSchema}
-        onSubmit={async (values) => {
-          console.log(values);
+        onSubmit={async (values) => { 
           await createAccount(values.mnemonics);
           await encryptMnemonics(values.password, values.mnemonics);
           localStorage.setItem("password", values.password);

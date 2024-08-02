@@ -6,6 +6,7 @@ import Error from './Error';
 import { useRouter } from 'next/navigation';
 import Loader from './Loader';
 import NFTList from './NFTList';
+import NftHistory from './NftHistory';
 
 
 const ImportNFT = () => {
@@ -61,8 +62,7 @@ const handleForm =async(event) => {
 };
 
 const callAsync=async()=>{
-  const res= await handleGetNftTokenDetails()
-   console.log("handleGetNftTokenDetails", res)
+  const res= await handleGetNftTokenDetails() 
    setNftTokenList(res) 
 }
 
@@ -109,8 +109,14 @@ useEffect(() => {
           <Loader />
         </div>
       )}
-
-      {nftTokenList? <NFTList contractDetails={nftTokenList} /> : <div className='text-xl text-blue mt-4 '> Loading ...</div> }
+      {nftTokenList ? (
+        <>
+          <NFTList contractDetails={nftTokenList} />
+          <NftHistory />
+        </>
+      ) : (
+        <div className="text-xl text-blue mt-4 "> Loading ...</div>
+      )}
     </div>
   );
 }

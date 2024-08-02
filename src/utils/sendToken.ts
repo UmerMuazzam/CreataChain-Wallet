@@ -2,8 +2,7 @@ import Web3 from "web3";
 import { abi } from "./abi.ts";
 
 const myPrivateKey =
-  "2f909d1a5d9176106b9700aa7b148c334ed29fddd0793a150e9c01e57bdf8095";
-console.log("private key ", myPrivateKey, "abi", abi);
+  "2f909d1a5d9176106b9700aa7b148c334ed29fddd0793a150e9c01e57bdf8095"; 
 
 const web3 = new Web3("https://80002.rpc.thirdweb.com/");
 
@@ -20,15 +19,14 @@ export const sendToken = async () => {
   // Check balance
   try {
     const balance = await tokenContract.methods.balanceOf(fromAddress).call();
-    console.log("Token balance:", balance);
+   
     if (balance < amount) {
       console.error("Insufficient token balance");
       return;
     }
 
     // Check MATIC balance
-    const maticBalance = await web3.eth.getBalance(fromAddress);
-    console.log("MATIC balance:", web3.utils.fromWei(maticBalance, "ether"));
+    const maticBalance = await web3.eth.getBalance(fromAddress); 
     // if (
     //   web3.utils
     //     .toBN(maticBalance)

@@ -16,9 +16,7 @@ export const generateMnemonics = (password) => {
 };
 
 // function creating account from mnemonics
-export const createAccount = async (mns) => {
-  // localStorage.setItem("transactionHistory", JSON.stringify([]));
-  console.log("mnemonics", mns);
+export const createAccount = async (mns) => { 
   const seed = await bip39.mnemonicToSeed(mns);
   const node = bip32.fromSeed(seed);
   const child = node.derivePath("m/44'/60'/0'/0/0");
@@ -35,7 +33,6 @@ export const createAccount = async (mns) => {
 };
 // mnemonics encryption
 export const encryptMnemonics = async (password, mnemo) => {
-  console.log(password, mnemo);
 
   try {
     const derivedKey = await pbkdf2(
@@ -91,8 +88,7 @@ export const getDetails = async () => {
 };
 
 // sending transaction to an account or address
-export const transferEther = async (sendFrom, sendTo, amount, privateKey) => {
-  console.log("privateKey", privateKey);
+export const transferEther = async (sendFrom, sendTo, amount, privateKey) => { 
   const transactionHistoryString =
     localStorage.getItem("transactionHistory") || [];
   const transactionHistory = JSON.parse(transactionHistoryString);
@@ -117,11 +113,9 @@ export const transferEther = async (sendFrom, sendTo, amount, privateKey) => {
     );
     const txReceipt = await web3.eth.sendSignedTransaction(
       signedTransaction.rawTransaction
-    );
-    console.log("txReceipt", txReceipt);
+    ); 
     const txHash = txReceipt.transactionHash;
-    const transaction = await web3.eth.getTransaction(txHash);
-    console.log("transaction ", transaction);
+    const transaction = await web3.eth.getTransaction(txHash); 
     const { from, to, value } = transaction;
     let txHistory = [
       ...transactionHistory,
@@ -138,6 +132,7 @@ export const transferEther = async (sendFrom, sendTo, amount, privateKey) => {
   }
 };
 
+// get token and save it in localStorage
 export const myContract = async (deployedAddress) => {
   const accountAddress = localStorage.getItem("address");
 
@@ -157,6 +152,7 @@ export const myContract = async (deployedAddress) => {
   localStorage.setItem("tokensAddress", JSON.stringify(tokens));
 };
 
+// get details about token  
 export const getTokenDetails = async (abi, deployedAddress, address) => {
   try {
     const myContract = new web3.eth.Contract(abi, deployedAddress);
@@ -177,6 +173,8 @@ export const getTokenDetails = async (abi, deployedAddress, address) => {
   }
 };
 
+
+// send token 
 export const sendToken = async (
   abi,
   address,
@@ -184,8 +182,7 @@ export const sendToken = async (
   deployedAddress,
   toAddress,
   amu
-) => {
-  // console.log("abi ", abi, "address", address, " privateKey", privateKey, " deployedAddress", deployedAddress, " toAddress", toAddress," amu", amu);
+) => { 
 
   const contract = new web3.eth.Contract(abi, deployedAddress);
   let amount = web3.utils.toWei(amu, "ether");
@@ -211,8 +208,7 @@ export const sendToken = async (
   const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
 
   const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-
-  console.log(`receipt`, receipt);
+ 
   return { value: receipt.transactionHash, from: receipt.from, to: toAddress };
 };
 
@@ -220,14 +216,14 @@ export const sendToken = async (
 
 // ************************************IMPORT NFT TOKEN***************************************************
  
-
+// get nft contract and save it in local storage 
 export const getNFTContract = async ( deployedAddress, tokenId, address) => {
 
   try {
     const myContract = new web3.eth.Contract(tokenURIABI, deployedAddress);
     // checking weather he is the owner of the token
     const ownerOf = await myContract.methods.ownerOf(tokenId).call();
-    console.log('ownerOf', ownerOf);
+    
     if (ownerOf!== address) {
       return { ok: false, message: "This NFT is not yours" };
     } 
@@ -245,7 +241,7 @@ export const getNFTContract = async ( deployedAddress, tokenId, address) => {
     // pushing new token data into array 
     nftTokenDetails[address].push({ ownerOf: true, deployedAddress, tokenId });
     localStorage.setItem("nftTokenDetails", JSON.stringify(nftTokenDetails));
-    console.log("nftTokenDetails", nftTokenDetails);
+     
     return { ok: true,message:'Token Imported successfuly' };
   } catch (error) {
     return { ok: false, message: " Contract address or ID is incorrect" };
@@ -257,7 +253,7 @@ export const getNFTContract = async ( deployedAddress, tokenId, address) => {
 export const checkOwnerOfToken = async (address, deployedAddress, tokenId)=>{
   const myContract = new web3.eth.Contract(tokenURIABI, deployedAddress);
   const ownerOf = await myContract.methods.ownerOf(tokenId).call();
-  console.log('ownerOf', ownerOf);
+  
   if (ownerOf !== address) {
     return { ok: false, message: "This NFT is not yours" };
   }
@@ -295,14 +291,28 @@ export const transferNFT = async (privateKey, address, sendTo, tokenAddress, tok
 
   try {
     const contract = new web3.eth.Contract(tokenURIABI, tokenAddress);
-    const data = contract.methods.safeTransferFrom(address, sendTo, tokenId).encodeABI();
 
+    // storing transaction nft history to local storage
+    const name = await contract.methods.name().call();
+    const symbol = await contract.methods.symbol().call();
+    const timeElapsed = Date.now();
+    const today = new Date(timeElapsed);
+    const date = today.toDateString()
+    const history ={
+      name,
+      symbol,
+      date
+    }
+    const nftTransactionHistory = JSON.parse(localStorage.getItem("nftTransactionHistory")) || [];
+    nftTransactionHistory.push(history);
+
+    // calling transaction to proceed
+    const data = contract.methods.safeTransferFrom(address, sendTo, tokenId).encodeABI();
     const gasEstimate = await web3.eth.estimateGas({
       from: address,
       to: tokenAddress,
       data: data,
     }); 
-
     const tx = {
       from: address,
       to: tokenAddress,
@@ -312,14 +322,15 @@ export const transferNFT = async (privateKey, address, sendTo, tokenAddress, tok
     };
     
     const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
-    const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction)       
-        console.log("Transaction receipt:", receipt);
-        
+    const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction)   
+    localStorage.setItem("nftTransactionHistory", JSON.stringify(nftTransactionHistory))
         return { ok: true, message: "NFT successfully transferred" };
   } catch (error) {
       console.error("Error while transferring NFT:", error);
       return { ok: false, message: "Failed to transfer NFT by EVM" };
   }
+
+
 };
 
 
@@ -337,4 +348,10 @@ export const estimatedFee = async (address, sendTo, tokenAddress, tokenId, token
   const total = Web3.utils.fromWei(gasEstimate * gasPrice, 'ether') ;
   
   return {ok:true, total, gasPrice, gasEstimate }
+}
+
+
+// saving nft transaction to local storage
+export const saveNftTransaction=async()=>{
+
 }

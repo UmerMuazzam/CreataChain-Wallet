@@ -19,8 +19,7 @@ const password = localStorage.getItem("password");
 
 const page = () => {
   const [loading, setLoading] = useState(false);
-  const [estimateFee, SetEstimateFee] = useState(0);
-  console.log("estimateFee", estimateFee);
+  const [estimateFee, SetEstimateFee] = useState(0); 
   const [error, setError] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -29,8 +28,7 @@ const page = () => {
 
   const handleEstimateTotalFee= async(e)=>{
     setError('')
-    SetEstimateFee(0)
-    console.log('handleEstimateTotalFee ',e.target.value)
+    SetEstimateFee(0) 
     // check reciever address is correct 
     const valid = web3.utils.isAddress(e.target.value);
     if(!valid) {

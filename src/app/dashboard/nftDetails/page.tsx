@@ -106,7 +106,7 @@ const page = () => {
         <div className="flex flex-col pt-6 items-center gap-4">
           <div className="text-xl font-semibold">
             {" "}
-            {data?.name} {data?.symbol}
+            {data?.name} ({data?.symbol})
           </div>
 
           {data.owner ? (

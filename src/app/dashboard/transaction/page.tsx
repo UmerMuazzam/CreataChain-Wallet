@@ -15,8 +15,7 @@ const page = () => {
   const [sendTo, setSendTo] = useState(false);
   const [amount, setAmount] = useState(0);
   const searchParams = useSearchParams();
-  const [balance] = useState(searchParams.get("ballance"));
-  console.log("ballance", balance, "amount", amount);
+  const [balance] = useState(searchParams.get("ballance")); 
 
   const router = useRouter();
   const [checkPass, setCheckPass] = useState(false);
@@ -28,8 +27,7 @@ const page = () => {
     const recieverAdd = formData.get("address");
     const password = formData.get("password");
     const am = Number(formData.get("amount"));
-    setAmount(am);
-    console.log("amount > balance", am > balance);
+    setAmount(am); 
     if (am > balance) return;
     if (password.length < 8)
       return alert("Password must be at least of 8 characters");

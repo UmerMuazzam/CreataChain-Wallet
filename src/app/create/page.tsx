@@ -24,8 +24,7 @@ const SignupSchema = Yup.object().shape({
 
 const page = () => {
   const router = useRouter();
-  const [loading, setLoading] =useState(false);
-  console.log("loading", loading);
+  const [loading, setLoading] =useState(false); 
 
   return (
     <div className="container relative">

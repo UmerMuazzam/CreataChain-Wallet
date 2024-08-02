@@ -28,8 +28,7 @@ const page = () => {
 
   const name = searchParams.get("name");
   const balance = searchParams.get("balance");
-  const deployedAddress = searchParams.get("deployedAddress");
-  console.log("loading: " + loading)
+  const deployedAddress = searchParams.get("deployedAddress"); 
 
 
 
@@ -62,8 +61,7 @@ const page = () => {
            deployedAddress,
            sendTokenAddress,
            amount
-         );
-         console.log("res", res);
+         ); 
          tokenTxHistory.push(res);
          localStorage.setItem("tokenTxHistory", JSON.stringify(tokenTxHistory));
           
