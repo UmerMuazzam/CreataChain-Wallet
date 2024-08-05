@@ -292,20 +292,14 @@ export const transferNFT = async (privateKey, address, sendTo, tokenAddress, tok
   try {
     const contract = new web3.eth.Contract(tokenURIABI, tokenAddress);
 
-    // storing transaction nft history to local storage
+    // variables to store transaction history 
     const name = await contract.methods.name().call();
     const symbol = await contract.methods.symbol().call();
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
     const date = today.toDateString()
-    const history ={
-      name,
-      symbol,
-      date
-    }
     const nftTransactionHistory = JSON.parse(localStorage.getItem("nftTransactionHistory")) || [];
-    nftTransactionHistory.push(history);
-
+    
     // calling transaction to proceed
     const data = contract.methods.safeTransferFrom(address, sendTo, tokenId).encodeABI();
     const gasEstimate = await web3.eth.estimateGas({
@@ -321,8 +315,18 @@ export const transferNFT = async (privateKey, address, sendTo, tokenAddress, tok
       gasPrice: await web3.eth.getGasPrice()
     };
     
-    const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
+    const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey); 
     const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction)   
+
+    // storing variables to localstorage 
+    const history ={
+      name,
+      symbol,
+      date,
+      hash: receipt.transactionHash
+    }
+    nftTransactionHistory.push(history);
+     
     localStorage.setItem("nftTransactionHistory", JSON.stringify(nftTransactionHistory))
         return { ok: true, message: "NFT successfully transferred" };
   } catch (error) {

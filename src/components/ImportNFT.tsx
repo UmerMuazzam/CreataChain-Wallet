@@ -115,7 +115,7 @@ useEffect(() => {
           <NftHistory />
         </>
       ) : (
-        <div className="text-xl text-blue mt-4 "> Loading ...</div>
+        <div className="text-xl text-blue mt-4 text-center"> Loading ...</div>
       )}
     </div>
   );

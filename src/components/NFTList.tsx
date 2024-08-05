@@ -29,7 +29,7 @@ const NFTList = ({ contractDetails }) => {
               alt="Creata logo"
             />
           </div>
-          <div>
+          <div className='text-left'>
             <div>{item?.name}</div>
             <div className="text-blue">{item?.symbol} </div>
           </div>

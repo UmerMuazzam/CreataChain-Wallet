@@ -1,6 +1,13 @@
+import { useRouter } from 'next/navigation';
 import React from 'react'
 
-const History = ({ transactionHistory, value }) => {
+const History = ({ transactionHistory, value }) => { 
+  const router = useRouter();
+
+  const navigate = (hash: string) => {
+    router.push(`https://www.oklink.com/amoy/tx/${hash}`);
+  };
+
   return (
     <div>
       <h3 className='font-bold text-center text-[18px] mt-6'>History</h3>
@@ -8,7 +15,7 @@ const History = ({ transactionHistory, value }) => {
         <div className="">
           {transactionHistory?.map((item, i) => {
             return (
-              <div key={i}>
+              <div className='cursor-pointer' key={i} onClick={() => navigate(item.value)} >
                 <div className="flex flex-col    gap-2   my-6">
                   <span className="text-gray-500 text-[14px]">
                     <b>Sender</b> : {item.from}
@@ -16,7 +23,7 @@ const History = ({ transactionHistory, value }) => {
                   <span className="text-gray-500 text-[14px]">
                     <b>Reciever</b> : {item.to}
                   </span>
-                  <span className="text-gray-500 text-[14px] cursor-pointer w-[450px] whitespace-nowrap overflow-hidden overflow-ellipsis">
+                  <span className="text-gray-500 text-[14px] cursor-pointer w-[450px] whitespace-nowrap overflow-hidden overflow-ellipsis underline">
                     <b>{value} </b> : {item.value}
                   </span>
                   <span className="text-gray-500 text-[14px]">

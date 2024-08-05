@@ -12,7 +12,7 @@ import History from "./History";
 
 const Tokens = () => {
   const address = localStorage.getItem("address");
-  const [contractDetails, setContractDetails] = useState([]);
+  const [contractDetails, setContractDetails] = useState("");
   const transactionHistory =
     JSON.parse(localStorage.getItem("tokenTxHistory")) || [];
 
@@ -103,7 +103,11 @@ const Tokens = () => {
         </div>
       )}
 
-      <TokensList contractDetails={contractDetails} />
+      {contractDetails ? (
+        <TokensList contractDetails={contractDetails} />
+      ) : (
+        <div className="text-xl text-blue mt-4 w-full"> Loading ...</div>
+      )}
 
       <History
         value="Transaction Hash"

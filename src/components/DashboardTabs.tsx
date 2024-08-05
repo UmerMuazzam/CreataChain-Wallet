@@ -59,7 +59,7 @@ export default function BasicTabs({ myValue, transactionHistory }) {
       </Box>
       <CustomTabPanel value={value} index={0}>
         <History
-          value={"Amount Send"}
+          value={"Transaction hash"}
           transactionHistory={tokenTransactionHistory}
         />
       </CustomTabPanel>
